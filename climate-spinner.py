@@ -14,6 +14,7 @@
 # IMPORT PYTHON LIBRARIES
 #------------------------------------------------------------------------------
 import numpy as np
+import pandas as pd
 import random
 from random import randint
 from random import randrange
