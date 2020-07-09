@@ -9,7 +9,7 @@ to anthropogenic climate change. Inspired by the Twitter thread: https://twitter
 and the BAMS paper by Rachel Dryden & M. Granger Morgan, 'A Simple Strategy to Communicate about Climate Attribution', 
 Bull. Amer. Meteor. Soc. (2020), 101(6): E949–E953, doi: https://doi.o10.1175/BAMS-D-19-0174.1.
 
-An online app for testing and development is available at: https://climate-spinners.herokuapp.com/
+An online app for testing and development is available at: https://climate-spinner.herokuapp.com/
 
 ## Contents
 
@@ -34,7 +34,7 @@ Run a static version at localhost with:
 	        
 ## License
 
-The code is distributed under terms and conditions of the [MIT license](https://opensource.org/licenses/MIT).
+The code is distributed under terms and conditions of the [Unlicense](https://github.com/patternizer/climate-spinner/blob/master/LICENSE).
 
 ## Contact information
 
