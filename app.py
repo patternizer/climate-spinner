@@ -14,8 +14,6 @@
 # IMPORT PYTHON LIBRARIES
 #------------------------------------------------------------------------------
 import numpy as np
-import pandas as pd
-import scipy as sp
 import random
 from random import randint
 from random import randrange
@@ -29,9 +27,6 @@ register_matplotlib_converters()
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from skimage import io
-import glob
-from PIL import Image
 # Silence library version notifications
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -42,7 +37,6 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from flask import Flask
-import json
 import os
 #------------------------------------------------------------------------------
 
