@@ -3,8 +3,8 @@
 #------------------------------------------------------------------------------
 # PROGRAM: app.py
 #------------------------------------------------------------------------------
-# Version 0.2
-# 10 July, 2020
+# Version 0.3
+# 12 July, 2020
 # Michael Taylor
 # https://patternizer.github.io
 # patternizer AT gmail DOT com
@@ -290,7 +290,6 @@ def update_spinner_now(value, colors):
     labels, angles_now, angles_cc = choose_spinner(value)
     nlabels = len(labels)
     
-    
     # Create Plotly figure
     """
     Draw climate spinner
@@ -308,6 +307,9 @@ def update_spinner_now(value, colors):
     cmap_idx = np.linspace(0,len(cmap)-1, nlabels, dtype=int)
     colors = [cmap[i] for i in cmap_idx]
                     
+    spinanglestep = 90                   
+    spinangles = np.arange(spinanglestep,360+spinanglestep,step=spinanglestep)
+
 #    fig = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
 #    fig.add_trace(go.Pie(labels=labels, values=angles_now, name="Now"), 1, 1)
 #    fig.add_trace(go.Pie(labels=labels, values=angles_cc, name="Future"), 1, 2)    
@@ -342,54 +344,20 @@ def update_spinner_now(value, colors):
             updatemenus=[dict(type="buttons", buttons=[dict(label="Spin", method="animate", args=[None])])],
         ),
         frames=[
-        
-            go.Frame( 
-            data = [go.Pie(labels=labels, values=angles_now, name="Now",        
-            hoverinfo='percent', 
-            textinfo='none', 
-            insidetextorientation='radial', 
-            rotation=90,
-            direction='clockwise',        
-            textfont_size=15, 
-            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
-            hole=0.5)] 
-            ),
-            go.Frame( 
-            data = [go.Pie(labels=labels, values=angles_now, name="Now",        
-            hoverinfo='percent', 
-            textinfo='none', 
-            insidetextorientation='radial', 
-            rotation=180,
-            direction='clockwise',        
-            textfont_size=15, 
-            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
-            hole=0.5)] 
-            ),
-            go.Frame( 
-            data = [go.Pie(labels=labels, values=angles_now, name="Now",        
-            hoverinfo='percent', 
-            textinfo='none', 
-            insidetextorientation='radial', 
-            rotation=270,
-            direction='clockwise',        
-            textfont_size=15, 
-            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
-            hole=0.5)]
-            ),
-            go.Frame( 
-            data = [go.Pie(labels=labels, values=angles_now, name="Now",        
-            hoverinfo='percent', 
-            textinfo='none', 
-            insidetextorientation='radial', 
-            rotation=360,
-            direction='clockwise',        
-            textfont_size=15, 
-            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
-            hole=0.5)]
-            ),
-        ],
+            go.Frame(            
+                data = [go.Pie(labels=labels, values=angles_now, name="Now",        
+                    hoverinfo='percent', 
+                    textinfo='none',                     
+                    insidetextorientation='radial', 
+                    rotation=spinangles[k],
+                    direction='clockwise',        
+                    textfont_size=15, 
+                    marker=dict(colors=colors, line=dict(color='#000000', width=2)),
+                    hole=0.5)],
+            )
+            for k in range(len(spinangles))
+        ]
     )
-
     return fig
 
 @app.callback(
@@ -419,6 +387,9 @@ def update_climate_spinner_future(value, colors):
         cmap = ['#2f2f2f','#a1dcfc','#fdee03','#75b82b','#a84190','#0169b3']                                
     cmap_idx = np.linspace(0,len(cmap)-1, nlabels, dtype=int)
     colors = [cmap[i] for i in cmap_idx]
+
+    spinanglestep = 90                    
+    spinangles = np.arange(spinanglestep,360+spinanglestep,step=spinanglestep)
                     
     fig = go.Figure(
         data = [go.Pie(labels=labels, values=angles_cc, name="Future",        
@@ -436,55 +407,22 @@ def update_climate_spinner_future(value, colors):
             updatemenus=[dict(type="buttons", buttons=[dict(label="Spin", method="animate", args=[None])])],
         ),
         frames=[
-        
-            go.Frame( 
-            data = [go.Pie(labels=labels, values=angles_cc, name="Future",        
-            hoverinfo='percent', 
-            textinfo='none', 
-            insidetextorientation='radial', 
-            rotation=90,
-            direction='clockwise',        
-            textfont_size=15, 
-            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
-            hole=0.5)] 
-            ),
-            go.Frame( 
-            data = [go.Pie(labels=labels, values=angles_cc, name="Future",        
-            hoverinfo='percent', 
-            textinfo='none', 
-            insidetextorientation='radial', 
-            rotation=180,
-            direction='clockwise',        
-            textfont_size=15, 
-            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
-            hole=0.5)] 
-            ),
-            go.Frame( 
-            data = [go.Pie(labels=labels, values=angles_cc, name="Future",        
-            hoverinfo='percent', 
-            textinfo='none', 
-            insidetextorientation='radial', 
-            rotation=270,
-            direction='clockwise',        
-            textfont_size=15, 
-            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
-            hole=0.5)]
-            ),
-            go.Frame( 
-            data = [go.Pie(labels=labels, values=angles_cc, name="Future",        
-            hoverinfo='percent', 
-            textinfo='none', 
-            insidetextorientation='radial', 
-            rotation=360,
-            direction='clockwise',        
-            textfont_size=15, 
-            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
-            hole=0.5)]
-            ),
-        ],
-    )
-
+            go.Frame(            
+                data = [go.Pie(labels=labels, values=angles_cc, name="Future",        
+                    hoverinfo='percent', 
+                    textinfo='none', 
+                    insidetextorientation='radial', 
+                    rotation=spinangles[k],
+                    direction='clockwise',        
+                    textfont_size=15, 
+                    marker=dict(colors=colors, line=dict(color='#000000', width=2)),
+                    hole=0.5)],
+            )
+            for k in range(len(spinangles))
+        ]
+    )        
     return fig
+
                 
 ##################################################################################################
 # Run the dash app
