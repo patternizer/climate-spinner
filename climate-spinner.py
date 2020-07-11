@@ -3,8 +3,8 @@
 #------------------------------------------------------------------------------
 # PROGRAM: climate-spineer.py
 #------------------------------------------------------------------------------
-# Version 0.1
-# 8 July, 2020
+# Version 0.2
+# 10 July, 2020
 # Michael Taylor
 # https://patternizer.github.io
 # patternizer AT gmail DOT com
@@ -221,11 +221,16 @@ app.layout = html.Div(children=[
 
 # ------------
             dbc.Col(html.Div([
-                dcc.Graph(id="climate-spinner", style = {'padding' : '0px', 'width': '100%', 'display': 'inline-block'}),  
+                dcc.Graph(id="climate-spinner-now", style = {'padding' : '0px', 'width': '100%', 'display': 'inline-block'}),  
             ]), 
-            width={'size':8}, 
+            width={'size':4}, 
             ),
-            
+# ------------
+            dbc.Col(html.Div([
+                dcc.Graph(id="climate-spinner-future", style = {'padding' : '0px', 'width': '100%', 'display': 'inline-block'}),  
+            ]), 
+            width={'size':4}, 
+            ),            
 # ------------
             dbc.Col(html.Div([  
                                                     
@@ -275,16 +280,15 @@ app.layout = html.Div(children=[
 # ========================================================================
            
 @app.callback(
-    Output(component_id='climate-spinner', component_property='figure'),
+    Output(component_id='climate-spinner-now', component_property='figure'),
     [Input(component_id='input', component_property='value'), 
     Input(component_id='radio', component_property='value')],    
     )
     
-def update_graph(value, colors):
+def update_climate_spinner_now(value, colors):
 
     labels, angles_now, angles_cc = choose_spinner(value)
     nlabels = len(labels)
-    
     
     # Create Plotly figure
     """
@@ -303,25 +307,183 @@ def update_graph(value, colors):
     cmap_idx = np.linspace(0,len(cmap)-1, nlabels, dtype=int)
     colors = [cmap[i] for i in cmap_idx]
                     
-    fig = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
-    fig.add_trace(go.Pie(labels=labels, values=angles_now, name="Now"), 1, 1)
-    fig.add_trace(go.Pie(labels=labels, values=angles_cc, name="Future"), 1, 2)
-    
-    fig.update_traces(
-        hoverinfo='percent', 
-        textinfo='label', 
-        insidetextorientation='radial', 
-        textfont_size=15, 
-        marker=dict(colors=colors, line=dict(color='#000000', width=2)),
-        hole=0.5,
-    )
+#    fig = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
+#    fig.add_trace(go.Pie(labels=labels, values=angles_now, name="Now"), 1, 1)
+#    fig.add_trace(go.Pie(labels=labels, values=angles_cc, name="Future"), 1, 2)    
+#    fig.update_traces(
+#        hoverinfo='percent', 
+#        textinfo='none',                # or 'label' 
+#        insidetextorientation='radial', # or 'tangential'
+#        rotation=0,
+#        direction='clockwise',                
+#        textfont_size=15, 
+#        marker=dict(colors=colors, line=dict(color='#000000', width=2)),
+#        hole=0.5)
+#    fig.update_layout(
+#        annotations=[
+#            dict(text='Now', x=0.2, y=0.5, font_size=20, showarrow=False),
+#            dict(text='Future', x=0.825, y=0.5, font_size=20, showarrow=False)],
+#    )
+
+    fig = go.Figure(
+        data = [go.Pie(labels=labels, values=angles_now, name="Now",        
+            hoverinfo='percent', 
+            textinfo='none', 
+            insidetextorientation='tangential', 
+            textfont_size=15, 
+            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
+            hole=0.5)
+        ],                        
+        layout=go.Layout(
+            xaxis=dict(range=[0, 5], autorange=False),
+            yaxis=dict(range=[0, 5], autorange=False),
+            annotations=[dict(text='Now', x=0.5, y=0.5, font_size=20, showarrow=False)],
+            updatemenus=[dict(type="buttons", buttons=[dict(label="Spin", method="animate", args=[None])])],
+        ),
+        frames=[
         
-    fig.update_layout(
-#        title_text="Climate Spinners",
-        annotations=[
-            dict(text='Now', x=0.2, y=0.5, font_size=20, showarrow=False),
-            dict(text='Future', x=0.825, y=0.5, font_size=20, showarrow=False)])
+            go.Frame( 
+            data = [go.Pie(labels=labels, values=angles_now, name="Now",        
+            hoverinfo='percent', 
+            textinfo='none', 
+            insidetextorientation='radial', 
+            rotation=90,
+            direction='clockwise',        
+            textfont_size=15, 
+            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
+            hole=0.5)] 
+            ),
+            go.Frame( 
+            data = [go.Pie(labels=labels, values=angles_now, name="Now",        
+            hoverinfo='percent', 
+            textinfo='none', 
+            insidetextorientation='radial', 
+            rotation=180,
+            direction='clockwise',        
+            textfont_size=15, 
+            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
+            hole=0.5)] 
+            ),
+            go.Frame( 
+            data = [go.Pie(labels=labels, values=angles_now, name="Now",        
+            hoverinfo='percent', 
+            textinfo='none', 
+            insidetextorientation='radial', 
+            rotation=270,
+            direction='clockwise',        
+            textfont_size=15, 
+            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
+            hole=0.5)]
+            ),
+            go.Frame( 
+            data = [go.Pie(labels=labels, values=angles_now, name="Now",        
+            hoverinfo='percent', 
+            textinfo='none', 
+            insidetextorientation='radial', 
+            rotation=360,
+            direction='clockwise',        
+            textfont_size=15, 
+            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
+            hole=0.5)]
+            ),
+        ],
+    )
+
+    return fig
+
+@app.callback(
+    Output(component_id='climate-spinner-future', component_property='figure'),
+    [Input(component_id='input', component_property='value'), 
+    Input(component_id='radio', component_property='value')],    
+    )
     
+def update_climate_spinner_future(value, colors):
+
+    labels, angles_now, angles_cc = choose_spinner(value)
+    nlabels = len(labels)
+    
+    # Create Plotly figure
+    """
+    Draw climate spinner
+    """
+    if colors == 'Viridis':    
+        cmap = px.colors.sequential.Viridis_r
+    elif colors == 'Cividis':    
+        cmap = px.colors.sequential.Cividis_r
+    elif colors == 'Plotly3':
+        cmap = px.colors.sequential.Plotly3_r
+    elif colors == 'Magma':
+        cmap = px.colors.sequential.Magma_r
+    elif colors == 'Shikari':
+        cmap = ['#2f2f2f','#a1dcfc','#fdee03','#75b82b','#a84190','#0169b3']                                
+    cmap_idx = np.linspace(0,len(cmap)-1, nlabels, dtype=int)
+    colors = [cmap[i] for i in cmap_idx]
+                    
+
+    fig = go.Figure(
+        data = [go.Pie(labels=labels, values=angles_cc, name="Future",        
+            hoverinfo='percent', 
+            textinfo='none', 
+            insidetextorientation='tangential', 
+            textfont_size=15, 
+            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
+            hole=0.5)
+        ],                        
+        layout=go.Layout(
+            xaxis=dict(range=[0, 5], autorange=False),
+            yaxis=dict(range=[0, 5], autorange=False),
+            annotations=[dict(text='Future', x=0.5, y=0.5, font_size=20, showarrow=False)],
+            updatemenus=[dict(type="buttons", buttons=[dict(label="Spin", method="animate", args=[None])])],
+        ),
+        frames=[
+        
+            go.Frame( 
+            data = [go.Pie(labels=labels, values=angles_cc, name="Future",        
+            hoverinfo='percent', 
+            textinfo='none', 
+            insidetextorientation='radial', 
+            rotation=90,
+            direction='clockwise',        
+            textfont_size=15, 
+            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
+            hole=0.5)] 
+            ),
+            go.Frame( 
+            data = [go.Pie(labels=labels, values=angles_cc, name="Future",        
+            hoverinfo='percent', 
+            textinfo='none', 
+            insidetextorientation='radial', 
+            rotation=180,
+            direction='clockwise',        
+            textfont_size=15, 
+            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
+            hole=0.5)] 
+            ),
+            go.Frame( 
+            data = [go.Pie(labels=labels, values=angles_cc, name="Future",        
+            hoverinfo='percent', 
+            textinfo='none', 
+            insidetextorientation='radial', 
+            rotation=270,
+            direction='clockwise',        
+            textfont_size=15, 
+            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
+            hole=0.5)]
+            ),
+            go.Frame( 
+            data = [go.Pie(labels=labels, values=angles_cc, name="Future",        
+            hoverinfo='percent', 
+            textinfo='none', 
+            insidetextorientation='radial', 
+            rotation=360,
+            direction='clockwise',        
+            textfont_size=15, 
+            marker=dict(colors=colors, line=dict(color='#000000', width=2)),
+            hole=0.5)]
+            ),
+        ],
+    )
+
     return fig
         
 ##################################################################################################
